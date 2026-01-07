@@ -1,0 +1,37 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    Note right of browser: El usuario escribe la nota y hace clic en "Save"
+
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+    activate server
+    Note over server: El servidor guarda la nueva nota recibida en el cuerpo de la petición
+    server-->>browser: HTTP status code 302 (URL redirect to /notes)
+    deactivate server
+
+    Note right of browser: El navegador se recarga y solicita de nuevo la página de notas
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    activate server
+    server-->>browser: HTML document
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server-->>browser: the css file
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate server
+    server-->>browser: the JavaScript file
+    deactivate server
+
+    Note right of browser: El navegador ejecuta el JS que solicita el JSON actualizado
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: [{ "content": "nueva nota", "date": "2026-1-7" }, ... ]
+    deactivate server
+
+    Note right of browser: El navegador ejecuta la función callback y renderiza las notas (incluyendo la nueva)
